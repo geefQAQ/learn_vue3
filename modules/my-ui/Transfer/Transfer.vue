@@ -1,64 +1,42 @@
 <template>
   <div>
-    <select
-      @change="setTargetIndex($event.target.value)"
-    >
-      <option
-        v-for="(title, index) of options"
-        :key="index"
-        :value="index">
-      {{ title }}
-      </option>
-    </select>
+    <selector
+      :data="options"
+      @select-change="setTargetIndex"
+    />
   </div>
   <div class="transfer">
     <div class="box left-list">
-      <h1 class="list-title">{{ leftTitle }}</h1>
-      <div
-        v-for="item of leftListData"
-        :key="item.id"
-        :class="['list-item',  item.disabled ? 'disabled' : '']"
-      >
-        <input
-          type="checkbox"
-          :disabled="item.disabled"
-          :id="'__checkbox__' + item.id"
-          @click="setCheckedData($event.target.checked, 'left', item)"
-        >
-        <label :for="'__checkbox__' + item.id">{{ item.phone_name }}</label>
-      </div>
+      <list-title :title="leftTitle" />
+      <list-item
+        :data="leftListData"
+        left-or-right="left"
+        @checkbox-click="setCheckedData"
+      />
     </div>
-    <div class="box button-group">
-      <button
-        :disabled="transferButtonDisabled.left"
-        :class="{ disabled: transferButtonDisabled.left }"
-        @click="removeRightListData(checkedData.right)"
-      >&lt;</button>
-      <button
-        :disabled="transferButtonDisabled.right"
-        @click="addRightListData(checkedData.left)"
-      >&gt;</button>
-    </div>
+    <button-group
+      :left-button-disabled="transferButtonDisabled.left"
+      :right-button-disabled="transferButtonDisabled.right"
+      @left-button-click="removeRightListData(checkedData.right)"
+      @right-button-click="addRightListData(checkedData.left)"
+    />
     <div class="box right-list">
-      <h1 class="list-title">{{ rightTitle }}</h1>
-      <div
-        v-for="item of rightListData"
-        :key="item.id"
-        :class="['list-item',  item.disabled ? 'disabled' : '']"
-      >
-        <input
-          type="checkbox"
-          :disabled="item.disabled"
-          :id="'__checkbox__' + item.id"
-          @click="setCheckedData($event.target.checked, 'right', item)"
-        >
-        <label :for="'__checkbox__' + item.id">{{ item.phone_name }}</label>
-      </div>
+      <list-title :title="rightTitle" />
+      <list-item
+        :data="rightListData"
+        left-or-right="right"
+        @checkbox-click="setCheckedData"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
+  import Selector from './components/Selector';
+  import ListTitle from './components/ListTitle';
+  import ButtonGroup from './components/ButtonGroup';
+  import ListItem from './components/ListItem';
+
   import {
     useTargetIndex,
     useComputedData,
@@ -120,50 +98,4 @@
   height: 100%;
 }
 
-.list-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 38px;
-  font-weight: normal;
-  margin: 0;
-  color: #666;
-  border-bottom: 1px solid #ddd;
-  background-color: #efefef;
-  font-size: 14px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  button {
-    border: none;
-    outline: none;
-    width: 38px;
-    height: 38px;
-    background: lightseagreen;
-    color: #fff;
-    border-radius: 5px;
-    &.disabled {
-      opacity: 0.6;
-      // pointer-events: none;
-      cursor: not-allowed;
-    }
-    &:nth-child(2) {
-      margin-left: 10px;
-    }
-  }
-}
-
-.list-item {
-  display: flex;
-  // align-items: center;
-
-  &.disabled {
-    opacity: 0.6;
-  }
-}
 </style>
