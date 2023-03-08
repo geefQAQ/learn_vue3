@@ -1,7 +1,9 @@
 import Transfer from './Transfer/Transfer';
+import Stars from './Stars';
 
 const components = {
-  Transfer
+  Transfer,
+  Stars
 }
 
 export default {
